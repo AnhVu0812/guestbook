@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sổ Lưu Bút</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>📖 Sổ Lưu Bút</h1>
+
+  <!-- Form gửi lời nhắn -->
+  <form id="messageForm" method="POST" action="/submit">
+    <input type="text" name="name" placeholder="Tên của bạn" required>
+    <textarea name="message" placeholder="Lời nhắn" required></textarea>
+    <button type="submit">Gửi</button>
+  </form>
+
+  <hr>
+
+  <h2>Lời nhắn gần đây:</h2>
+  
+<% messages.forEach(msg => { %>
+  <div class="message-item" data-id="<%= msg._id %>">
+    <p>
+      <strong><%= msg.name %></strong>: 
+      <span class="message-text"><%= msg.message %></span>
+    </p>
+    
+    <small><%= new Date(msg.createdAt).toLocaleString() %></small>
+
+    <!-- Các nút sửa/xóa -->
+    <div class="message-actions">
+      <button class="edit-btn">Sửa</button>
+
+      <form method="POST" action="/messages/<%= msg._id %>?_method=DELETE" class="inline-form">
+        <button class="delete-btn" type="submit" onclick="return confirm('Xác nhận xóa?')">Xóa</button>
+      </form>
+    </div>
+
+    <!-- Form sửa tin nhắn -->
+    <form class="edit-form" method="POST" action="/messages/<%= msg._id %>?_method=PUT" style="display: none;">
+      <input type="text" name="name" value="<%= msg.name %>" required>
+      <input type="text" name="message" value="<%= msg.message %>" required>
+      <button type="submit">Lưu</button>
+      <button type="button" class="cancel-btn">Hủy</button>
+    </form>
+
+    <hr>
+  </div>
+<% }) %>
+
+  <script src = "/main.js"></script>
+</body>
+</html>
