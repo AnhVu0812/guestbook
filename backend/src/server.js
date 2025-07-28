@@ -1,6 +1,7 @@
 const Message = require('./Models/Messages');
 const express = require('express');
 const path = require('path');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const configViewEngine = require('./config/viewEngine');
 const messageRoutes = require('./routes/messageRoutes');
@@ -11,6 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/', messageRoutes);
 
@@ -29,7 +31,7 @@ connectDB();
 
 app.get('/', async (req, res) => {
     try {
-        const messages = await Message.find().sort({ createAt: -1 }).limit(10);
+        const messages = await Message.find().sort({ createdAt: -1 }).limit(10);
         res.render('index', { messages });
     } catch (err) {
         console.error('Error fetching messages:', err); 
@@ -54,7 +56,7 @@ app.post('/submit', async (req, res) => {
 
 app.get('/messages', async (req, res) => {
     try {
-        const messages = await Message.find().sort({ createAt: -1 }).limit(10);
+        const messages = await Message.find().sort({ createdAt: -1 }).limit(10);
         res.json(messages);
     } catch (err) {
         console.error('Error fetching messages:', err);
