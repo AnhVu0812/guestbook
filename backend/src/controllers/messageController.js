@@ -2,7 +2,7 @@ const Message = require('../Models/Messages');
 
 const getMessages = async (req, res) => {
     try {
-        const messages = await Message.find().sort({ createAt: -1 }).limit(10);
+        const messages = await Message.find().sort({ createdAt: -1 }).limit(10);
         res.render('index', { messages });
     } catch (err) {
         console.error('Error fetching messages:', err);
@@ -33,11 +33,19 @@ const updateMessage = async (req, res) => {
     const { message, name } = req.body;
 
     try {
-        const updatedMessage = await Message.findByIdAndUpdate(id, { name, message }, { new: true });
+        const updatedMessage = await Message.findByIdAndUpdate(
+            id, 
+            { name, message }, 
+            { new: true }
+        );
+
         if (!updatedMessage) {
+            console.log('Message not found for update:', id);
             return res.status(404).json({ error: 'Message not found' });
         }   
-        res.json(updatedMessage);
+
+        console.log('Message updated successfully:', updatedMessage);
+        res.redirect('/');
     } catch (err) {
         console.error('Error updating message:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -52,7 +60,9 @@ const deleteMessage = async (req, res) => {
         if (!deletedMessage) {
             return res.status(404).json({ error: 'Message not found' });
         }
-        res.json({ message: 'Message deleted successfully' });
+
+        console.log('Message deleted successfully:', id);
+        res.redirect('/');
     } catch (err) {
         console.error('Error deleting message:', err);
         res.status(500).json({ error: 'Internal Server Error' });
