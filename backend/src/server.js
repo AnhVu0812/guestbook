@@ -46,13 +46,17 @@ app.post('/submit', async (req, res) => {
     if (name && message) {
         try{
             await Message.create({ name, message});
-            res.redirect('/');
             console.log('Message saved:', { name, message });
+            return res.redirect('/');
         }catch (err) {
             console.error('Error saving message:', err);
+            return res.redirect('/');
+        }
+    } else {
+        console.error('Name or message is missing');
+        return res.redirect('/');
     }
-    res.redirect('/');
-}});
+});
 
 app.get('/messages', async (req, res) => {
     try {

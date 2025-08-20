@@ -46,6 +46,7 @@ const updateMessage = async (req, res) => {
 
         console.log('Message updated successfully:', updatedMessage);
         res.redirect('/');
+
     } catch (err) {
         console.error('Error updating message:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -63,6 +64,7 @@ const deleteMessage = async (req, res) => {
 
         console.log('Message deleted successfully:', id);
         res.redirect('/');
+
     } catch (err) {
         console.error('Error deleting message:', err);
         res.status(500).json({ error: 'Internal Server Error' });
